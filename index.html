@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quest-On | AI와 교육의 통합</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --bg-secondary: #f8fafc;
+            /* Slate-50 */
+            --text-primary: #1f1f1f;
+            --text-secondary: #4b5563;
+            /* Gray-600 */
+            --accent-color: #3b82f6;
+            /* Blue-500 */
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #9333ea 100%);
+            --card-bg: #ffffff;
+            --border-color: #e5e5e5;
+            --font-main: 'Outfit', sans-serif;
+            --font-kr: 'Noto Sans KR', sans-serif;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-kr), var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.7;
+            word-break: keep-all;
+        }
+
+        /* Header */
+        header {
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-main);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* General Layout */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .content-section {
+            padding: 6rem 0;
+        }
+
+        .bg-secondary {
+            background-color: var(--bg-secondary);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            border-left: 3px solid var(--accent-color);
+            padding-left: 1rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            padding: 6rem 0;
+            background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-color);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.03em;
+        }
+
+        .divider {
+            width: 60px;
+            height: 4px;
+            background: var(--accent-gradient);
+            margin-bottom: 2rem;
+            border-radius: 2px;
+        }
+
+        .text-block h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .text-block p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+        }
+
+        .highlight-text {
+            color: var(--accent-color) !important;
+            font-weight: 600;
+            font-size: 1.2rem !important;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            border: 1px solid var(--border-color);
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .card strong {
+            color: var(--text-primary);
+        }
+
+        /* Vision Section */
+        .vision-block {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .vision-block h3 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .vision-statement {
+            font-size: 1.4rem;
+            font-weight: 600;
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+
+        .vision-list {
+            background: #eff6ff;
+            /* Blue-50 */
+            padding: 2rem;
+            border-radius: 1rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .vision-list h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .vision-list ul {
+            list-style: none;
+        }
+
+        .vision-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .vision-list li::before {
+            content: '•';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Why Now Section */
+        .whynow-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .big-icon {
+            font-size: 3rem;
+            color: #ef4444;
+            /* Red-500 */
+            font-weight: 700;
+        }
+
+        .grid-2-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .text-col h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .text-col p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .highlight-box {
+            text-align: center;
+            background: linear-gradient(135deg, #eff6ff, #f3e8ff);
+            /* Blue-50 to Purple-50 */
+            padding: 3rem;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .highlight-box h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .highlight-box p {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Product Section */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .highlight-card {
+            border-color: var(--accent-color);
+            background: #eff6ff;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+        }
+
+        .feature-card ul {
+            list-style: none;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.2rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .feature-card li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--accent-color);
+            padding-left: 1rem;
+        }
+
+        .process-section {
+            margin-bottom: 4rem;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .step {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            position: relative;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .step-num {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 30px;
+            height: 30px;
+            background: var(--accent-gradient);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .step strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .step p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .note {
+            margin-top: 1.5rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .differentiators {
+            margin-bottom: 4rem;
+        }
+
+        .check-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .differentiators h3 {
+            font-family: var(--font-kr);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .check-list li {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-family: var(--font-kr);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .check-list li::before {
+            content: '✓';
+            color: #10b981;
+            /* Green-500 */
+            font-weight: bold;
+        }
+
+        .effects {
+            background: #ecfdf5;
+            /* Green-50 */
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid #d1fae5;
+        }
+
+        .effects ul {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .effects li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .effects li::before {
+            content: '🌱';
+            position: absolute;
+            left: 0;
+            font-size: 0.8rem;
+            top: 5px;
+        }
+
+        /* Team Member Detailed Styles */
+        .team-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+        }
+
+        .profile-card {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border-radius: 1.5rem;
+            padding: 3rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 3rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .profile-image {
+            width: 100%;
+            aspect-ratio: 3/4;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-title .icon-logo {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .profile-title h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .profile-tags {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .role-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .tag-badge {
+            background: #f3f4f6;
+            color: #4b5563;
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .tag-badge.highlight {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .profile-body {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .profile-section h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .profile-section p {
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .bullet-list {
+            list-style: none;
+        }
+
+        .bullet-list li {
+            position: relative;
+            padding-left: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .bullet-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #9ca3af;
+        }
+
+        .sub-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .sub-section h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .sub-section ul {
+            list-style: disc;
+            padding-left: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .sub-section li {
+            margin-bottom: 0.3rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .profile-card {
+                grid-template-columns: 1fr;
+                padding: 2rem;
+            }
+
+            .profile-image {
+                width: 200px;
+                margin: 0 auto;
+            }
+
+            .profile-header {
+                text-align: center;
+                align-items: center;
+            }
+
+            .profile-tags {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .grid-2-col,
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 0 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <a href="#" class="logo">
+                <img src="images/qlogo_icon.png" alt="Quest-On Logo">
+                Quest-On
+            </a>
+            <nav class="navbar">
+                <ul class="nav-links">
+                    <li><a href="#background">Background</a></li>
+                    <li><a href="#whynow">Why Now</a></li>
+                    <li><a href="#product">Product</a></li>
+                    <li><a href="team.html">Members</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Section 1: Team Identity -->
+        <section id="team" class="hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="tag">Team "Quest-On"</span>
+                    <h1>AI를 배제할 것인가,<br>교육의 일부로 받아들일 것인가?</h1>
+                    <div class="divider"></div>
+                    <div class="text-block">
+                        <h3>Quest-On은</h3>
+                        <p>급격히 변화하는 AI 시대 속에서, 교육이 직면한 근본적 질문에 답하고자 시작된 팀입니다.</p>
+                        <p>우리는 AI의 등장이 기존 평가 방식을 무력화시키는 위협이자, 동시에 새로운 기회가 될 수 있음을 보았습니다.</p>
+                        <p class="highlight-text">그 답은 차단이 아닌, 통합에 있다고 믿습니다.</p>
+                        <br>
+                        <p>팀 "Quest-On"은 교육자와 학생 모두가 공정하고 의미 있는 평가 경험을 누릴 수 있도록, AI와의 상호작용을 바탕으로 한 새로운 시험 환경을 설계합니다.</p>
+                        <p>우리의 목표는 단순히 시험을 바꾸는 것이 아니라, <strong>학습의 본질과 잠재력을 끌어올리는 것</strong>입니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Background -->
+        <section id="background" class="content-section">
+            <div class="container">
+                <h2 class="section-title">설립배경</h2>
+                <p class="section-subtitle">한 세기 넘게 이어져 온 교육 평가 방식의 한계에서 출발했습니다.</p>
+
+                <div class="card">
+                    <p>객관식 시험은 단순 암기력만을 측정할 뿐, 4차 산업혁명 시대가 요구하는 비판적 사고력과 창의적 문제 해결 능력을 평가하기에는 부족했습니다.</p>
+                    <p>이를 극복하기 위해 2025년, 저희는 <strong>AI 기술과 교육학적 접근을 결합한 새로운 평가 시스템</strong>을 개발했습니다.</p>
+                    <p>단순히 점수를 매기는 도구가 아니라, 학습과 평가가 서로 맞물려 학생들의 성장을 촉진하는 플랫폼을 지향합니다.</p>
+                </div>
+
+                <div class="vision-block">
+                    <h3>QUEST-ON은</h3>
+                    <p class="vision-statement">학습자가 미래 사회가 요구하는 핵심 역량을 기를 수 있도록,<br>교육의 본질적인 변화를 이끌어내는 새로운 패러다임을 제시합니다.
+                    </p>
+                </div>
+
+                <div class="vision-list">
+                    <h3>🌍 우리의 비전</h3>
+                    <ul>
+                        <li>AI 시대에 걸맞은 새로운 학습 평가 패러다임 정립</li>
+                        <li>교육 현장의 신뢰성과 투명성 확보</li>
+                        <li>학생의 역량을 100% 발휘할 수 있는 환경 제공</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Why Now -->
+        <section id="whynow" class="content-section bg-secondary">
+            <div class="container">
+                <div class="whynow-header">
+                    <span class="big-icon">?</span>
+                    <h2 class="section-title">Why Now?</h2>
+                </div>
+                <p class="section-subtitle">암기식 시험은 더 이상 학생들의 사고력과 창의성을 평가하지 못하고 있습니다.</p>
+
+                <div class="grid-2-col">
+                    <div class="text-col">
+                        <h3>오늘날의 교육은 거대한 전환점에 서 있습니다.</h3>
+                        <p>ChatGPT와 같은 생성형 AI의 등장으로 전 세계 학습 방식이 근본적으로 변화했고, 기존의 객관식 시험으로는 학생들의 실제 역량을 더 이상 제대로 평가할 수 없다는
+                            인식이 확산되고 있습니다.</p>
+                        <p>OECD와 세계경제포럼(WEF)은 미래 인재에게 필요한 핵심 역량으로 비판적 사고, 창의력, 문제 해결력을 강조합니다.</p>
+                    </div>
+                    <div class="text-col">
+                        <h3>그러나,</h3>
+                        <p>현행 시험 제도는 여전히 암기 중심 평가에 머물러 있어, 이러한 괴리가 학생, 교사, 학부모, 기업 모두에게 문제로 대두되고 있습니다.</p>
+                        <p>동시에 글로벌 에듀테크 시장은 폭발적으로 성장하고 있습니다. HolonIQ에 따르면 2025년까지 교육 분야 AI 시장은 연평균 45% 이상 성장할 전망입니다.</p>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>QUEST-ON은 바로 이 시점에서</h3>
+                    <p>"AI와 교육학을 결합한 차세대 평가 시스템"을 통해<br>교육의 본질적 변화를 주도하고자 합니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Product -->
+        <section id="product" class="content-section">
+            <div class="container">
+                <h2 class="section-title">🚀 프로덕트 소개 | Quest-On</h2>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>🔍 문제 정의</h3>
+                        <ul>
+                            <li>기존 시험·과제는 <strong>AI로 대리 작성/풀이가 가능</strong> → 평가 의미 왜곡</li>
+                            <li>객관식·T/F 시험은 추측으로도 정답 가능 → 학생 역량 검증 어려움</li>
+                            <li>교수자 입장에서는 <strong>AI 개입 통제 불가</strong>, 신뢰도 높은 평가 방식을 잃어감</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card highlight-card">
+                        <h3>💡 솔루션: Quest-On</h3>
+                        <p class="quote">"AI를 차단하는 대신, 시험 환경에 녹여내자"</p>
+                        <p>Quest-On은 AI를 활용한 상호작용형 학습 평가 플랫폼으로,<br>학생이 단순히 답을 맞히는 것이 아니라 <strong>사고 과정 전체를
+                                평가</strong>합니다.</p>
+                    </div>
+                </div>
+
+                <div class="process-section">
+                    <h3>🧩 시험 구조 (4단계)</h3>
+                    <div class="steps">
+                        <div class="step">
+                            <span class="step-num">1</span>
+                            <div class="step-content">
+                                <strong>Abstract Questioning</strong>
+                                <p>개방형 상황 기반 질문으로 사고의 출발점 제시</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <span class="step-num">2</span>
+                            <div class="step-content">
+                                <strong>Clarification</strong>
+                                <p>학생이 AI에게 질문하며 정보 탐색·구조화</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <span class="step-num">3</span>
+                            <div class="step-content">
+                                <strong>Response Generation</strong>
+                                <p>스스로의 의사결정을 반영한 답안 제출</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <span class="step-num">4</span>
+                            <div class="step-content">
+                                <strong>AI Guided Reflection</strong>
+                                <p>AI와 Q&A를 통해 논리 검증 및 답안 보완</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="note">✍️ 교수자는 AI 개입 범위를 직접 설정하고, 최종 평가자로 참여합니다.</p>
+                </div>
+
+                <div class="differentiators">
+                    <h3>✨ Quest-On의 차별점</h3>
+                    <ul class="check-list">
+                        <li><strong>AI 기반 시험 혁신</strong> – 학습 과정이 아닌 <em>평가 환경</em>에 AI를 최초 도입</li>
+                        <li><strong>역량 100% 발휘</strong> – 추측 배제, 아는 만큼을 확실히 보여줄 수 있는 구조</li>
+                        <li><strong>실시간 상호작용</strong> – 교수의 1:1 지도를 대체할 AI 보조</li>
+                        <li><strong>투명한 관리</strong> – AI 사용 기록을 교육자가 직접 확인</li>
+                        <li><strong>확장성</strong> – 경영학 → 사회과학, 공학, 수학 등 다양한 학문 적용 가능</li>
+                    </ul>
+                </div>
+
+                <div class="effects">
+                    <h3>🌱 기대 효과</h3>
+                    <ul>
+                        <li><strong>학생</strong>: 사고력·창의력·AI 활용 능력 강화</li>
+                        <li><strong>교수</strong>: 정량+정성 평가가 가능한 새로운 시험 포맷 확보</li>
+                        <li><strong>교육기관</strong>: 신뢰도 높은 차세대 평가 솔루션 도입</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Quest-On. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add simple reveal animation on scroll
+            const cards = document.querySelectorAll('.profile-card, .feature-card, .step, .card');
+
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            cards.forEach((card, index) => {
+                // Set initial state
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = `opacity 0.6s ease, transform 0.6s ease ${index * 0.05}s`;
+
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+
+</html>
