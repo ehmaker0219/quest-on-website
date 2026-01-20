@@ -466,25 +466,7 @@ footer {
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .hero-section h1 {
-        font-size: 2.2rem;
-    }
-
-    .nav-links {
-        display: none;
-    }
-
-    .grid-2-col,
-    .feature-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .container {
-        padding: 0 1.5rem;
-    }
-}
+/* Responsive styles moved to bottom */
 /* Team Member Detailed Styles */
 .team-list {
     display: flex;
@@ -493,14 +475,16 @@ footer {
 }
 
 .profile-card {
-    background: #fff; /* White background as per reference */
-    color: #333; /* Dark text for readability on white */
+    background: #fff;
+    /* White background as per reference */
+    color: #333;
+    /* Dark text for readability on white */
     border-radius: 20px;
     padding: 3rem;
     display: grid;
     grid-template-columns: 300px 1fr;
     gap: 3rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .profile-header {
@@ -514,7 +498,7 @@ footer {
     aspect-ratio: 3/4;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .profile-image img {
@@ -626,7 +610,8 @@ footer {
     align-items: center;
     justify-content: center;
     min-height: 200px;
-    background: rgba(255, 255, 255, 0.05); /* Dark transparent for placeholders */
+    background: rgba(255, 255, 255, 0.05);
+    /* Dark transparent for placeholders */
     border: 2px dashed rgba(255, 255, 255, 0.1);
     color: var(--text-secondary);
 }
@@ -635,24 +620,92 @@ footer {
     text-align: center;
 }
 
-/* Responsive */
+/* Responsive Design */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 2rem;
+    }
+
+    .hero-section h1 {
+        font-size: 3rem;
+    }
+}
+
+/* Small Laptop / Tablet Portrait (max-width: 900px) */
 @media (max-width: 900px) {
     .profile-card {
         grid-template-columns: 1fr;
-        padding: 2rem;
+        padding: 2.5rem;
+        gap: 2rem;
+        text-align: center;
     }
-    
+
     .profile-image {
         width: 200px;
         margin: 0 auto;
     }
-    
+
     .profile-header {
-        text-align: center;
         align-items: center;
     }
-    
+
     .profile-tags {
         justify-content: center;
+    }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+    }
+
+    .hero-section {
+        padding: 4rem 0;
+        text-align: center;
+    }
+
+    .hero-content {
+        margin: 0 auto;
+    }
+
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+
+    .divider {
+        margin: 0 auto 2rem;
+    }
+
+    .grid-2-col,
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .container {
+        padding: 0 1.5rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+}
+
+/* Small Mobile (max-width: 640px) */
+@media (max-width: 640px) {
+    .hero-section h1 {
+        font-size: 2.2rem;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+    }
+
+    .card,
+    .highlight-box,
+    .profile-card {
+        padding: 1.5rem;
     }
 }
