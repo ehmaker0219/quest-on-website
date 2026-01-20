@@ -24,6 +24,7 @@
             --font-kr: 'Noto Sans KR', sans-serif;
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
 
         * {
@@ -92,7 +93,7 @@
         /* Team Hero */
         .team-hero {
             text-align: center;
-            padding: 8rem 2rem 4rem;
+            padding: 6rem 2rem 4rem;
             background: var(--bg-secondary);
         }
 
@@ -110,157 +111,223 @@
             margin: 0 auto;
         }
 
-        /* Team Grid */
+        /* Team Grid & Flip Cards */
         .team-container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 4rem 2rem;
         }
 
-        .member-block {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 4rem;
-            margin-bottom: 8rem;
-            /* Increased spacing between members */
-            align-items: start;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 6rem;
+        .member-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2.5rem;
         }
 
-        .member-block:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
+        .member-card {
+            background-color: transparent;
+            width: 340px;
+            max-width: 100%;
+            /* Allow flexible width but constrained */
+            flex: 1 1 300px;
+            /* Cap max width so they don't get too huge on last row */
+            max-width: 400px;
+            height: 600px;
+            perspective: 1000px;
+            cursor: pointer;
         }
 
-        .member-image-col {
-            position: sticky;
-            top: 100px;
-        }
-
-        .member-image {
+        .member-card-inner {
+            position: relative;
             width: 100%;
-            aspect-ratio: 3/4;
-            border-radius: 1rem;
-            overflow: hidden;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            border-radius: 1.5rem;
             box-shadow: var(--shadow-md);
-            margin-bottom: 1.5rem;
         }
 
-        .member-image img {
+        /* Float class for Javascript toggle */
+        .member-card.flipped .member-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .member-card-front,
+        .member-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Front Styling */
+        .member-card-front {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+        }
+
+        .member-image-wrapper {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 2rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .member-image-wrapper img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .member-info h2 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
+        .member-image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
         }
 
-        .member-role {
+        .member-card-front h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .member-card-front .role {
+            font-family: var(--font-main);
             color: var(--accent-color);
             font-weight: 600;
             font-size: 1.1rem;
-            margin-bottom: 2.5rem;
-            display: block;
-            font-family: var(--font-main);
+            margin-bottom: 1.5rem;
         }
 
-        .section-header {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-            margin-top: 2rem;
+        .click-hint {
+            margin-top: auto;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            opacity: 0.7;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .section-header::before {
-            content: '';
-            display: block;
-            width: 4px;
-            height: 1.2rem;
-            background: var(--accent-color);
-            border-radius: 2px;
+        /* Back Styling */
+        .member-card-back {
+            transform: rotateY(180deg);
+            padding: 0;
+            /* Remove padding from container to let header stretch */
+            text-align: left;
+            overflow-y: auto;
+            background: #ffffff;
+            /* Scrollbar styling */
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) transparent;
         }
 
-        .bio-text {
+        .member-card-back-content {
+            padding: 0 2rem 2rem 2rem;
+            /* Add padding to content wrapper */
+        }
+
+        .member-card-back::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .member-card-back::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .member-card-back::-webkit-scrollbar-thumb {
+            background-color: rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+        }
+
+        .back-header {
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem 2rem 1rem 2rem;
+            /* Padding matches container */
+            margin-bottom: 1.5rem;
+            position: sticky;
+            top: 0;
+            background: #ffffff;
+            /* Ensure solid background */
+            z-index: 10;
+        }
+
+        .back-header h3 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .back-header .role-small {
+            font-size: 0.9rem;
             color: var(--text-secondary);
-            font-size: 1.05rem;
-            margin-bottom: 2rem;
         }
 
-        .bio-text p {
-            margin-bottom: 1rem;
-            line-height: 1.8;
-        }
-
-        .bullet-list {
-            list-style: none;
-            margin-bottom: 2rem;
-        }
-
-        .bullet-list li {
-            position: relative;
-            padding-left: 1.2rem;
-            margin-bottom: 0.6rem;
-            color: var(--text-secondary);
-        }
-
-        .bullet-list li::before {
-            content: '•';
-            position: absolute;
-            left: 0;
-            color: var(--accent-color);
-            font-weight: bold;
-        }
-
-        .details-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            /* Stacked for more space */
-            gap: 2rem;
-            margin-top: 3rem;
-            background: var(--bg-secondary);
-            padding: 2rem;
-            border-radius: 1rem;
-        }
-
-        .sub-section {
+        .detail-section {
             margin-bottom: 1.5rem;
         }
 
-        .sub-section h4 {
+        .detail-title {
             font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-primary);
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .detail-text {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
             margin-bottom: 0.5rem;
         }
 
-        .sub-section ul {
+        .detail-list {
             list-style: none;
             padding-left: 0;
         }
 
-        .sub-section li {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.3rem;
-            padding-left: 1rem;
+        .detail-list li {
             position: relative;
+            padding-left: 1rem;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
         }
 
-        .sub-section li::before {
-            content: '-';
+        .detail-list li::before {
+            content: '•';
             position: absolute;
             left: 0;
-            color: #9ca3af;
+            color: var(--accent-color);
+        }
+
+        .close-hint {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            opacity: 0.6;
+            cursor: pointer;
         }
 
         /* Footer */
@@ -273,15 +340,16 @@
         }
 
         @media (max-width: 768px) {
-            .member-block {
-                grid-template-columns: 1fr;
-                gap: 2rem;
+            .nav-links {
+                display: none;
             }
 
-            .member-image-col {
-                position: static;
-                max-width: 300px;
-                margin: 0 auto;
+            .team-hero {
+                padding: 4rem 1.5rem 2rem;
+            }
+
+            .team-hero h1 {
+                font-size: 2.2rem;
             }
         }
     </style>
@@ -309,415 +377,299 @@
     <section class="team-hero">
         <h1>Meet the Team</h1>
         <p>교육의 본질적 변화를 이끄는 Quest-On의 팀원들을 소개합니다.</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--accent-color);">* 카드를 클릭하면 상세 정보를 확인할 수 있습니다.</p>
     </section>
 
     <main class="team-container">
+        <div class="member-grid">
 
-        <!-- Member 1: Lee Jun -->
-        <div class="member-block">
-            <div class="member-image-col">
-                <div class="member-image">
-                    <img src="images/member_leejun.png" alt="이준">
-                </div>
-            </div>
-            <div class="member-info">
-                <h2>이준</h2>
-                <span class="member-role">Co-Founder & CEO</span>
-
-                <div class="bio-text">
-                    <div class="section-header">Introduction</div>
-                    <p>QUEST-ON의 공동 창업자이자 CEO로서, 초기 사업 기획부터 비전 수립·제품 설계·운영 관리 전 과정을 주도하고 있습니다.</p>
-                    <p>국내외 컨설팅 프로젝트와 글로벌 비즈니스 경진대회에서 쌓은 전략 기획 역량을 바탕으로, 교육과 AI가 결합된 새로운 학습 경험을 실현하기 위해 팀을 이끌고 있습니다.</p>
-                    <p>다국어 역량과 폭넓은 산업 분석 경험을 통해 다양한 이해관계자와 소통하며, 명확한 목표 설정과 실행 계획으로 팀의 방향을 제시합니다.</p>
-                    <p>탄탄한 준비와 실행력을 바탕으로 QUEST-ON이 교육 AI 분야에서 차별화된 위치를 확보할 수 있도록 끊임없이 노력하고 있습니다.</p>
-                </div>
-
-                <div class="bio-text">
-                    <div class="section-header">Role</div>
-                    <ul class="bullet-list">
-                        <li>QUEST-ON의 전반적인 비전 수립과 실행 전략 총괄</li>
-                        <li>투자자, 멘토, 외부 파트너사와의 대외 네트워크 관리 및 협상</li>
-                        <li>시장 분석을 통한 신규 사업 기회 발굴 및 실행 주도</li>
-                        <li>국내외 창업경진대회·VC 프로그램 참가를 위한 사업 계획서 기획·발표</li>
-                    </ul>
-                </div>
-
-                <div class="details-grid">
-                    <div class="detail-item">
-                        <div class="section-header" style="margin-top: 0;">Background</div>
-                        <div class="sub-section">
-                            <h4>고려대학교 경영학부 재학</h4>
-                            <ul>
-                                <li>GPA 4.15/4.5</li>
-                                <li>3학기 연속 Honors Student 선정</li>
-                            </ul>
+            <!-- Member 1: Lee Jun -->
+            <div class="member-card" onclick="this.classList.toggle('flipped')">
+                <div class="member-card-inner">
+                    <div class="member-card-front">
+                        <div class="member-image-wrapper">
+                            <img src="images/member_leejun.png" alt="이준">
                         </div>
-                        <div class="sub-section">
-                            <h4>Kearney Korea Research Analyst</h4>
-                            <ul>
-                                <li>배터리 산업에 관한 다국어(한·영·중) 리서치 및 전문가 인터뷰 진행</li>
-                                <li>글로벌 산업 자료 분석 및 인사이트 도출</li>
-                            </ul>
-                        </div>
-                        <div class="sub-section">
-                            <h4>고려대학교 비즈니스 전략 컨설팅 학회(KUSBC) 48대 회장</h4>
-                            <ul>
-                                <li>SK On, MayCoders 등과 산학협력 프로젝트 주도</li>
-                                <li>반도체·전기차·배터리·항공산업 등 다양한 산업 전략 수립 경험</li>
-                            </ul>
-                        </div>
-                        <div class="sub-section">
-                            <h4>국제 비즈니스 케이스 대회 수상</h4>
-                            <ul>
-                                <li>USC Marshall International Case Competition Finalist (BCG-Black Diamond Advisory 심사)
-                                </li>
-                                <li>E-Land 아시아 신시장 진출 전략 제안, 1위 수상</li>
-                                <li>Hyundai Mobis 실리콘밸리 스타트업 발굴 전략 제안, 2위 수상</li>
-                            </ul>
-                        </div>
-                        <div class="sub-section">
-                            <h4>다국적 프로젝트 및 교육 행사 기획 경험</h4>
-                            <ul>
-                                <li>2022 Model United Nations Climate Change Conference 사무총장(대한민국 산림청 주관)</li>
-                                <li>Korea International Organization Student Society 학술부장</li>
-                            </ul>
-                        </div>
+                        <h2>이준</h2>
+                        <div class="role">Co-Founder & CEO</div>
+                        <div class="click-hint">Click for details ↺</div>
                     </div>
+                    <div class="member-card-back">
+                        <div class="back-header">
+                            <h3>이준</h3>
+                            <div class="role-small">Co-Founder & CEO</div>
+                        </div>
 
-                    <div class="detail-item">
-                        <div class="section-header" style="margin-top: 0;">Strengths</div>
-                        <ul class="bullet-list">
-                            <li><strong>글로벌 시야</strong>: 해외 유학 및 국제 프로젝트 경험, 3개 국어(한국어·영어·중국어) 구사</li>
-                            <li><strong>전략·기획 전문성</strong>: 컨설팅 방식의 문제 해결 능력과 MECE 기반 산업 분석</li>
-                            <li><strong>리더십</strong>: 다양한 조직에서 회장·팀장 역할 수행, 대규모 인원 관리 및 프로젝트 총괄 경험</li>
-                            <li><strong>네트워크</strong>: 학내외 산업·학계·정부기관 네트워크 구축 경험</li>
-                            <li><strong>실행력</strong>: 초기 아이디어부터 시장 검증·발표·실행까지 전 과정을 주도한 사례 다수</li>
-                        </ul>
+                        <div class="member-card-back-content">
+                            <div class="detail-section">
+                                <div class="detail-title">Introduction</div>
+                                <p class="detail-text">QUEST-ON의 공동 창업자이자 CEO로서, 초기 사업 기획부터 비전 수립·제품 설계·운영 관리 전 과정을 주도하고
+                                    있습니다.</p>
+                                <p class="detail-text">국내외 컨설팅 프로젝트와 글로벌 비즈니스 경진대회에서 쌓은 전략 기획 역량을 바탕으로, 팀을 이끌고 있습니다.</p>
+                            </div>
+
+                            <div class="detail-section">
+                                <div class="detail-title">Role</div>
+                                <ul class="detail-list">
+                                    <li>QUEST-ON의 전반적인 비전 수립과 실행 전략 총괄</li>
+                                    <li>투자자, 멘토, 외부 파트너사와의 대외 네트워크 관리</li>
+                                    <li>시장 분석을 통한 신규 사업 기회 발굴 및 실행 주도</li>
+                                </ul>
+                            </div>
+
+                            <div class="detail-section">
+                                <div class="detail-title">Background</div>
+                                <ul class="detail-list">
+                                    <li>고려대학교 경영학부 (GPA 4.15/4.5)</li>
+                                    <li>Kearney Korea Research Analyst</li>
+                                    <li>고려대학교 비즈니스 전략 컨설팅 학회(KUSBC) 48대 회장</li>
+                                    <li>USC Marshall International Case Competition Finalist</li>
+                                </ul>
+                            </div>
+
+                            <div class="detail-section">
+                                <div class="detail-title">Strengths</div>
+                                <ul class="detail-list">
+                                    <li>글로벌 시야 (3개 국어 구사)</li>
+                                    <li>전략·기획 전문성</li>
+                                    <li>리더십 및 네트워크</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Member 2: Yoo Young-jun -->
+            <div class="member-card" onclick="this.classList.toggle('flipped')">
+                <div class="member-card-inner">
+                    <div class="member-card-front">
+                        <div class="member-image-wrapper">
+                            <img src="images/member_yooyoungjun.png" alt="유영준">
+                        </div>
+                        <h2>유영준</h2>
+                        <div class="role">Co-Founder & CMO</div>
+                        <div class="click-hint">Click for details ↺</div>
+                    </div>
+                    <div class="member-card-back">
+                        <div class="back-header">
+                            <h3>유영준</h3>
+                            <div class="role-small">Co-Founder & CMO</div>
+                        </div>
+
+                        <div class="member-card-back-content">
+                            <div class="detail-section">
+                                <div class="detail-title">Introduction</div>
+                                <p class="detail-text">초기 사업 구상 단계부터 시장 전략, 네트워크 구축, 파트너십 발굴 전 과정을 주도해 왔습니다.</p>
+                                <p class="detail-text">검증된 세일즈 성과와 실행 경험을 기반으로 QUEST-ON이 시장에 빠르게 안착할 수 있도록 기여하고 있습니다.
+                                </p>
+                            </div>
+
+                            <div class="detail-section">
+                                <div class="detail-title">Role</div>
+                                <ul class="detail-list">
+                                    <li>국내외 파트너십 발굴·협상·체결</li>
+                                    <li>매출 중심 세일즈 전략 총괄</li>
+                                    <li>투자자·고객·파트너 대상 피칭 및 관계 관리</li>
+                                </ul>
+                            </div>
+
+                            <div class="detail-section">
+                                <div class="detail-title">Background</div>
+                                <ul class="detail-list">
+                                    <li>홍익대학교 경영학부</li>
+                                    <li>총학생회 PARADIGM 학생복지위원장 (1억원+ 규모 프로모션 유치)</li>
+                                    <li>3분경제 Founder & Content Strategist (누적 조회수 100만+)</li>
+                                    <li>Relifestyle Founder (월 매출 2,500만원 달성)</li>
+                                </ul>
+                            </div>
+
+                            <div class="detail-section">
+                                <div class="detail-title">Strengths</div>
+                                <ul class="detail-list">
+                                    <li>창업 전반에 대한 깊은 이해</li>
+                                    <li>세일즈·네트워크 확장력</li>
+                                    <li>협상력 및 성과 중심 사고</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member 3: Jo Jun-hyeong -->
+            <div class="member-card" onclick="this.classList.toggle('flipped')">
+                <div class="member-card-inner">
+                    <div class="member-card-front">
+                        <div class="member-image-wrapper">
+                            <img src="images/member_jojunhyeong.png" alt="조준형">
+                        </div>
+                        <h2>조준형</h2>
+                        <div class="role">Co-Founder & CPO</div>
+                        <div class="click-hint">Click for details ↺</div>
+                    </div>
+                    <div class="member-card-back">
+                        <div class="back-header">
+                            <h3>조준형</h3>
+                            <div class="role-small">Co-Founder & CPO</div>
+                        </div>
+
+                        <div class="member-card-back-content">
+                            <div class="detail-section">
+                                <div class="detail-title">Introduction</div>
+                                <p class="detail-text">프로젝트의 초기 기획 단계부터 실제 서비스 구현까지 전 과정을 주도하는 개발자입니다.</p>
+                                <p class="detail-text">실생활 속 크고 작은 문제들을 기술로 해결하는 것을 목표로 하며, 끈기와 문제 해결력을 바탕으로 서비스를 발전시키고
+                                    있습니다.</p>
+                            </div>
+
+                            <div class="detail-section">
+                                <div class="detail-title">Role</div>
+                                <ul class="detail-list">
+                                    <li>서비스 기획 및 기술 구현 전반 주도</li>
+                                    <li>웹 및 소프트웨어 서비스 아키텍처 설계 및 개발</li>
+                                    <li>운영 및 유지보수를 통한 서비스 안정화</li>
+                                </ul>
+                            </div>
+
+                            <div class="detail-section">
+                                <div class="detail-title">Background</div>
+                                <ul class="detail-list">
+                                    <li>경기과학기술대학교 디자인공학과</li>
+                                    <li>3D Printer 예약 및 이용 현황 사이트 개발 (400명 이용)</li>
+                                    <li>개인 블로그 JIT-blog 개발 및 운영</li>
+                                </ul>
+                            </div>
+
+                            <div class="detail-section">
+                                <div class="detail-title">Strengths</div>
+                                <ul class="detail-list">
+                                    <li>문제 해결력 및 강한 끈기</li>
+                                    <li>웹·소프트웨어 서비스 풀스택 개발 역량</li>
+                                    <li>새로운 기술에 대한 능동적 탐구 태도</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member 4: Lee Eun-ho -->
+            <div class="member-card" onclick="this.classList.toggle('flipped')">
+                <div class="member-card-inner">
+                    <div class="member-card-front">
+                        <div class="member-image-wrapper">
+                            <img src="images/member_leeeunho.png" alt="이은호">
+                        </div>
+                        <h2>이은호</h2>
+                        <div class="role">Co-Founder & COO</div>
+                        <div class="click-hint">Click for details ↺</div>
+                    </div>
+                    <div class="member-card-back">
+                        <div class="back-header">
+                            <h3>이은호</h3>
+                            <div class="role-small">Co-Founder & COO</div>
+                        </div>
+
+                        <div class="member-card-back-content">
+                            <div class="detail-section">
+                                <div class="detail-title">Introduction</div>
+                                <p class="detail-text">꾸준한 리더십 경험과 조직 운영 능력을 바탕으로 팀의 안정적 성장을 뒷받침하고 있습니다.</p>
+                                <p class="detail-text">학생회 활동과 군 복무 경험에서 얻은 책임감을 바탕으로, 팀 내외부 소통을 원활히 이끌고 프로젝트를 체계적으로
+                                    관리합니다.
+                                </p>
+                            </div>
+
+                            <div class="detail-section">
+                                <div class="detail-title">Role</div>
+                                <ul class="detail-list">
+                                    <li>초기 멤버로서 팀 운영과 의사결정 참여</li>
+                                    <li>학내외 네트워크 연계 및 협력 활동 지원</li>
+                                    <li>프로젝트 진행 관리 및 팀원 간 소통 강화</li>
+                                </ul>
+                            </div>
+
+                            <div class="detail-section">
+                                <div class="detail-title">Background</div>
+                                <ul class="detail-list">
+                                    <li>홍익대학교 경제학부 (학생회 임원 다수 역임)</li>
+                                    <li>KATUSA 만기 전역</li>
+                                    <li>주짓수 및 축구 대회 입상 경력</li>
+                                </ul>
+                            </div>
+
+                            <div class="detail-section">
+                                <div class="detail-title">Strengths</div>
+                                <ul class="detail-list">
+                                    <li>검증된 리더십 및 조직 운영 경험</li>
+                                    <li>강한 책임감과 실행력</li>
+                                    <li>원활한 커뮤니케이션 및 협업 능력</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member 5: Choi Jin-ho -->
+            <div class="member-card" onclick="this.classList.toggle('flipped')">
+                <div class="member-card-inner">
+                    <div class="member-card-front">
+                        <div class="member-image-wrapper">
+                            <img src="images/member_choijinho.jpg" alt="최진호">
+                        </div>
+                        <h2>최진호</h2>
+                        <div class="role">Co-Founder & CTO<br><span style="font-size:0.8em; font-weight:400;">(STEM
+                                Strategy)</span></div>
+                        <div class="click-hint">Click for details ↺</div>
+                    </div>
+                    <div class="member-card-back">
+                        <div class="back-header">
+                            <h3>최진호</h3>
+                            <div class="role-small">Co-Founder & CTO (STEM Strategy)</div>
+                        </div>
+
+                        <div class="member-card-back-content">
+                            <div class="detail-section">
+                                <div class="detail-title">Introduction</div>
+                                <p class="detail-text">인문계 중심 서비스를 이공계(STEM) 전문 영역으로 확장하며 기술적 혁신을 이끌고 있습니다.</p>
+                                <p class="detail-text">서울대학교 화학생물공학 전공 지식과 AI 딥러닝 역량을 바탕으로, 복잡한 공학 논리를 디지털화하는 핵심 역할을
+                                    담당합니다.
+                                </p>
+                            </div>
+
+                            <div class="detail-section">
+                                <div class="detail-title">Role</div>
+                                <ul class="detail-list">
+                                    <li>STEM 확장 전략 및 기술 로드맵 수립</li>
+                                    <li>고난도 이공계 학습 콘텐츠 구조화 및 AI 알고리즘 최적화</li>
+                                    <li>융합형 에듀테크 제품 기획</li>
+                                </ul>
+                            </div>
+
+                            <div class="detail-section">
+                                <div class="detail-title">Background</div>
+                                <ul class="detail-list">
+                                    <li>서울대학교 화학생물공학부</li>
+                                    <li>FastMRI Challenge 참여 (Deep Learning/Big Data)</li>
+                                    <li>한화토탈에너지스 디지털 전환(DX) 프로젝트 팀장</li>
+                                    <li>다년간의 STEM 심화 교육 경험</li>
+                                </ul>
+                            </div>
+
+                            <div class="detail-section">
+                                <div class="detail-title">Strengths</div>
+                                <ul class="detail-list">
+                                    <li>STEM 도메인 전문성</li>
+                                    <li>기술적 문제 해결사 (Troubleshooter)</li>
+                                    <li>기술과 사용자를 잇는 브릿지 리더십</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-
-        <!-- Member 2: Yoo Young-jun -->
-        <div class="member-block">
-            <div class="member-image-col">
-                <div class="member-image">
-                    <img src="images/member_yooyoungjun.png" alt="유영준">
-                </div>
-            </div>
-            <div class="member-info">
-                <h2>유영준</h2>
-                <span class="member-role">Co-Founder & CMO</span>
-
-                <div class="bio-text">
-                    <div class="section-header">Introduction</div>
-                    <p>QUEST-ON의 공동 창업자이자 CMO로서, 초기 사업 구상 단계부터 시장 전략, 네트워크 구축, 파트너십 발굴 전 과정을 주도해 왔습니다.</p>
-                    <p>국내외 브랜드와의 협상, 대규모 프로모션 유치, 현장 세일즈 경험을 바탕으로, QUEST-ON이 시장에 빠르게 안착하고 안정적인 매출 기반을 마련할 수 있도록 팀을 이끌고
-                        있습니다.</p>
-                    <p>폭넓은 네트워크와 성과 중심의 실행력을 통해 투자자, 고객, 파트너와 신뢰 관계를 구축하며, 브랜드 가치를 극대화하는 전략을 수립합니다.</p>
-                    <p>비록 초기 단계이지만, 검증된 세일즈 성과와 실행 경험을 기반으로 QUEST-ON이 교육 AI 시장에서 주목받는 위치를 확보할 수 있도록 끊임없이 도전하고 있습니다.</p>
-                </div>
-
-                <div class="bio-text">
-                    <div class="section-header">Role</div>
-                    <ul class="bullet-list">
-                        <li>공동 창업자로서 초기 사업 기획 및 전략 수립 주도</li>
-                        <li>국내외 파트너십 발굴·협상·체결</li>
-                        <li>매출 중심 세일즈 전략 총괄</li>
-                        <li>B2B 영업 채널 구축 및 관리</li>
-                        <li>투자자·고객·파트너 대상 피칭 및 관계 관리</li>
-                    </ul>
-                </div>
-
-                <div class="details-grid">
-                    <div class="detail-item">
-                        <div class="section-header" style="margin-top: 0;">Background</div>
-                        <div class="sub-section">
-                            <h4>홍익대학교 경영학부 재학</h4>
-                        </div>
-                        <div class="sub-section">
-                            <h4>홍익대학교 제59대 총학생회 PARADIGM 학생복지위원장</h4>
-                            <ul>
-                                <li>100개 이상 지역 상권 및 대기업 파트너십 체결</li>
-                                <li>LG U+, Sprite, Binggrae, MUSINSA, LMC 등 대형 브랜드 협업 주도</li>
-                                <li>1억원+ 규모 기업 프로모션 유치(축제) 및 현장 운영 총괄</li>
-                            </ul>
-                        </div>
-                        <div class="sub-section">
-                            <h4>Metaverse Financial Lab — Research Assistant</h4>
-                            <ul>
-                                <li>예비창업자패키지 사업계획서 작성 및 시장 타당성 분석</li>
-                                <li>사업계획서 기반 투자·지원금 확보 전략 수립</li>
-                            </ul>
-                        </div>
-                        <div class="sub-section">
-                            <h4>3분경제 — Founder & Content Strategist</h4>
-                            <ul>
-                                <li>경제·시사 기사 요약 및 AI 이미지 제작을 전면 자동화하여 인스타그램 운영</li>
-                                <li>누적 조회수 100만+ 달성 (AI 기반 콘텐츠 제작·배포 프로세스 직접 설계 및 실행)</li>
-                            </ul>
-                        </div>
-                        <div class="sub-section">
-                            <h4>Relifestyle — Founder</h4>
-                            <ul>
-                                <li>위탁판매를 통해 월 매출 2,500만원 달성</li>
-                                <li>플레이오토(PlayAuto) 등 솔루션 프로그램 도입을 통해 전면 태스크 효율화 및 자동화 시스템 구축</li>
-                                <li>주문·재고·고객 응대 등 운영 프로세스를 자동화하여 인력·시간 비용을 절감하고 확장성 확보</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="detail-item">
-                        <div class="section-header" style="margin-top: 0;">Strengths</div>
-                        <ul class="bullet-list">
-                            <li><strong>창업 전반에 대한 깊은 이해</strong>: 제품·시장·팀에 대한 통찰력</li>
-                            <li><strong>세일즈·네트워크 확장력</strong>: 발굴부터 계약, 실행, 사후관리까지 일관된 프로세스 구축</li>
-                            <li><strong>협상력</strong>: 대기업·중견기업과의 유리한 조건 협상 및 계약 성사 경험</li>
-                            <li><strong>성과 중심 사고</strong>: 명확한 KPI 설정과 측정 가능한 결과 창출 (모의투자대회 2위, 독후감·에세이·사진 공모전 등 다수 수상)
-                            </li>
-                            <li><strong>다양한 실무 역량</strong>: 제안서 작성, 피칭, 현장 운영, 데이터 분석에 이르는 종합적 비즈니스 스킬</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Member 3: Jo Jun-hyeong -->
-        <div class="member-block">
-            <div class="member-image-col">
-                <div class="member-image">
-                    <img src="images/member_jojunhyeong.png" alt="조준형">
-                </div>
-            </div>
-            <div class="member-info">
-                <h2>조준형</h2>
-                <span class="member-role">Co-Founder & CTO</span>
-
-                <div class="bio-text">
-                    <div class="section-header">Introduction</div>
-                    <p>공동 창업자이자 개발자로서, 프로젝트의 초기 기획 단계부터 실제 서비스 구현까지 전 과정을 주도하고 있습니다.</p>
-                    <p>웹·소프트웨어 서비스 개발을 핵심 임무로 삼아, 실생활 속 크고 작은 문제들을 기술로 해결하는 것을 목표로 하고 있습니다.</p>
-                    <p>경기과학기술대학교에서 3D Printer 예약 및 이용 현황 사이트를 개발하여 학기 중 약 400명의 학생이 직접 사용하는 등, 실질적인 문제 해결 경험을 바탕으로 프로젝트를
-                        이끌어왔습니다.</p>
-                    <p>또한 개인 블로그 **JIT-blog (JustinTime)**를 구축하며 웹서비스 전반에 대한 개발 경험을 축적해왔습니다.</p>
-                    <p>끈기와 문제 해결력을 무기로, 작은 아이디어를 실제 서비스로 발전시키는 실행력을 갖추고 있으며, 앞으로도 소프트웨어 엔지니어로 성장해 다양한 문제를 기술적으로 해결하는 것을
-                        지향합니다.</p>
-                </div>
-
-                <div class="bio-text">
-                    <div class="section-header">Role</div>
-                    <ul class="bullet-list">
-                        <li>공동 창업자로서 서비스 기획 및 기술 구현 전반 주도</li>
-                        <li>웹 및 소프트웨어 서비스 아키텍처 설계 및 개발</li>
-                        <li>사용자 경험 기반 기능 개선 및 최적화</li>
-                        <li>운영 및 유지보수를 통한 서비스 안정화</li>
-                    </ul>
-                </div>
-
-                <div class="details-grid">
-                    <div class="detail-item">
-                        <div class="section-header" style="margin-top: 0;">Background</div>
-                        <div class="sub-section">
-                            <h4>양재고등학교 졸업</h4>
-                        </div>
-                        <div class="sub-section">
-                            <h4>컴퓨터 강의실 관리 및 운영 담당</h4>
-                        </div>
-                        <div class="sub-section">
-                            <h4>경기과학기술대학교 디자인공학과 재학 중</h4>
-                        </div>
-                        <div class="sub-section">
-                            <h4>3D Printer 예약 및 이용 현황 사이트 개발</h4>
-                            <ul>
-                                <li>학기 중 약 400명 학생이 이용</li>
-                                <li>학교 내 실제 서비스로 도입·운영</li>
-                            </ul>
-                        </div>
-                        <div class="sub-section">
-                            <h4>개인 프로젝트: JIT-blog (JustinTime) 개발</h4>
-                            <ul>
-                                <li>개인 학습·개발 과정을 기록하고 공유하는 블로그 구축</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="detail-item">
-                        <div class="section-header" style="margin-top: 0;">Strengths</div>
-                        <ul class="bullet-list">
-                            <li><strong>문제 해결력</strong>: 실생활의 불편함을 소프트웨어로 해결하는 실행 경험</li>
-                            <li><strong>끈기</strong>: 완성도 높은 결과를 위해 끝까지 몰입하는 태도</li>
-                            <li><strong>개발력</strong>: 웹·소프트웨어 서비스 전반을 직접 구현할 수 있는 기술력</li>
-                            <li><strong>호기심</strong>: 새로운 기술을 탐구하고 실험하는 능동적 학습 태도</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Member 4: Lee Eun-ho -->
-        <div class="member-block">
-            <div class="member-image-col">
-                <div class="member-image">
-                    <img src="images/member_leeeunho.png" alt="이은호">
-                </div>
-            </div>
-            <div class="member-info">
-                <h2>이은호</h2>
-                <span class="member-role">Co-Founder & COO</span>
-
-                <div class="bio-text">
-                    <div class="section-header">Introduction</div>
-                    <p>QUEST-ON의 초기 멤버로서, 꾸준한 리더십 경험과 조직 운영 능력을 바탕으로 팀의 안정적 성장을 뒷받침하고 있습니다.</p>
-                    <p>학생회 활동과 군 복무 경험에서 얻은 책임감과 실행력을 기반으로, 팀 내외부 소통을 원활히 이끌고 다양한 프로젝트가 체계적으로 진행될 수 있도록 기여합니다.</p>
-                    <p>또한 학업과 스포츠 활동을 병행하며 쌓아온 끈기와 도전 정신을 통해, 초기 단계의 스타트업이 직면하는 다양한 과제들을 해결해 나가고 있습니다.</p>
-                </div>
-
-                <div class="bio-text">
-                    <div class="section-header">Role</div>
-                    <ul class="bullet-list">
-                        <li>초기 멤버로서 팀 운영과 의사결정 참여</li>
-                        <li>학내외 네트워크 연계 및 협력 활동 지원</li>
-                        <li>프로젝트 진행 관리 및 실행 보조</li>
-                        <li>팀원 간 소통 및 협업 강화</li>
-                    </ul>
-                </div>
-
-                <div class="details-grid">
-                    <div class="detail-item">
-                        <div class="section-header" style="margin-top: 0;">Background</div>
-                        <div class="sub-section">
-                            <h4>서울 강서고등학교 졸업 (2020)</h4>
-                        </div>
-                        <div class="sub-section">
-                            <h4>홍익대학교 경제학부 재학</h4>
-                            <ul>
-                                <li>제14대 경제학부 학생회 홍보차장 (2021)</li>
-                                <li>제17대 경제학부 학생회 3학년 과대표 (2024)</li>
-                                <li>제59대 홍익대학교 총학생회 권리연대국원 (2025)</li>
-                            </ul>
-                        </div>
-                        <div class="sub-section">
-                            <h4>주한미군 한국군지원단(KATUSA) 복무 및 만기 전역 (2023)</h4>
-                        </div>
-                        <div class="sub-section">
-                            <h4>스포츠 활동</h4>
-                            <ul>
-                                <li>SGAA Gi 주짓수 챔피언십 금메달</li>
-                                <li>2024·2025 K7 고양특례시 Division League 참가</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="detail-item">
-                        <div class="section-header" style="margin-top: 0;">Strengths</div>
-                        <ul class="bullet-list">
-                            <li><strong>리더십 경험</strong>: 학생회와 학과 대표 활동을 통해 팀 조직과 운영 경험 축적</li>
-                            <li><strong>책임감과 실행력</strong>: 카투사 복무 등 다양한 단체 활동에서 검증된 강한 실행력</li>
-                            <li><strong>도전 정신</strong>: 주짓수·축구 등 스포츠 대회 참가 및 수상 경험을 통한 끈기와 집중력</li>
-                            <li><strong>조직 내 소통 역량</strong>: 학내외 다양한 직책을 수행하며 쌓은 협업·커뮤니케이션 능력</li>
-                            <li><strong>다재다능함</strong>: 학업·조직 활동·스포츠 경험을 아우르는 균형 잡힌 역량</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Member 5: Choi Jin-ho -->
-        <div class="member-block">
-            <div class="member-image-col">
-                <div class="member-image">
-                    <!-- Placeholder image -->
-                    <div
-                        style="width: 100%; height: 100%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #ccc;">
-                        <svg viewBox="0 0 24 24" width="60" height="60" fill="none" stroke="currentColor"
-                            stroke-width="1">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-            <div class="member-info">
-                <h2>최진호</h2>
-                <span class="member-role">Co-Founder & CTO (STEM Strategy)</span>
-
-                <div class="bio-text">
-                    <div class="section-header">Introduction</div>
-                    <p>QUEST-ON의 CTO로서, 인문계 중심에서 시작한 기존 서비스의 지평을 이공계(STEM) 전문 영역으로 확장하며 기술적 혁신을 이끌고 있습니다.</p>
-                    <p>기존의 교육 플랫폼들이 해결하지 힘든 이공계 특유의 복잡한 논리 구조와 수식의 디지털화 문제를 해결하기 위해 합류하였습니다. 서울대학교에서 화학생물공학을 전공하며 쌓은 공학적
-                        정밀함과 AI 딥러닝 프로젝트를 통해 단련된 지식을 바탕으로, QUEST-ON이 전 분야를 아우르는 지능형 학습 파트너로 도약하는 데 핵심적인 역할을 하고 있습니다.</p>
-                    <p>한화토탈에너지스의 DX 로드맵을 설계하고 MRI 영상 분석 알고리즘을 개선했던 경험은, 우리 서비스가 마주한 기술적 한계를 돌파하는 강력한 동력이 됩니다. 현장에서 수많은
-                        학생에게 과학과 수학을 가르치며 느꼈던 갈증을 기술로 해소하고, 누구나 공학적 사고의 즐거움을 누릴 수 있는 학습 환경을 구축하고자 합니다.</p>
-                    <p>인문학적 통찰력 위에 공학적 완성도를 더해, QUEST-ON이 에듀테크 시장에서 그 누구도 따라올 수 없는 기술적 차별성을 확보하도록 끊임없이 정진하고 있습니다.</p>
-                </div>
-
-                <div class="bio-text">
-                    <div class="section-header">Role</div>
-                    <div class="sub-section">
-                        <h4>QUEST-ON 기술 총괄 이사 (CTO) / STEM 확장 전략 부문</h4>
-                        <ul class="bullet-list">
-                            <li>인문·사회 계열 중심의 기존 플랫폼을 이공계(STEM) 전문 학습 영역으로 확장하기 위한 기술 로드맵 수립 및 실행</li>
-                            <li>공학적 전문 지식을 기반으로 고난도 이공계 학습 콘텐츠의 구조화 및 AI 알고리즘 최적화 주도</li>
-                            <li>서비스 확장을 가로막는 기술적 병목 현상 해소 및 대규모 데이터 처리 아키텍처 설계</li>
-                            <li>도메인 지식(화학·생물·물리 등)과 AI 기술을 결합한 융합형 에듀테크 제품 기획</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="details-grid">
-                    <div class="detail-item">
-                        <div class="section-header" style="margin-top: 0;">Background</div>
-                        <div class="sub-section">
-                            <h4>서울대학교 화학생물공학부 재학</h4>
-                            <ul>
-                                <li>정통 공학 커리큘럼을 통한 심도 있는 이공계 전문성 확보</li>
-                                <li>수학 및 과학 탐구 영역의 복잡한 논리 구조를 디지털화할 수 있는 학술적 배경 보유</li>
-                            </ul>
-                        </div>
-                        <div class="sub-section">
-                            <h4>FastMRI Challenge 참여 (Deep Learning/Big Data)</h4>
-                            <ul>
-                                <li>의료 영상 분석 알고리즘의 정확도를 개선하며 고차원 데이터 처리 및 AI 모델링 역량 증명</li>
-                                <li>이공계 특화 데이터의 정밀한 분석 및 시각화 솔루션 개발 경험</li>
-                            </ul>
-                        </div>
-                        <div class="sub-section">
-                            <h4>한화토탈에너지스 디지털 전환(DX) 프로젝트 팀장</h4>
-                            <ul>
-                                <li>에너지 산업 현장의 기술적 니즈를 분석하여 비즈니스 로드맵으로 변환하는 리더십 발휘</li>
-                                <li>전통적 산업 분야의 디지털 혁신 경험을 QUEST-ON의 STEM 확장에 이식</li>
-                            </ul>
-                        </div>
-                        <div class="sub-section">
-                            <h4>STEM 교육 현장 전문성</h4>
-                            <ul>
-                                <li>다년간의 최상위권 입시 학원 및 과외를 통해 이공계 학습자의 페인 포인트(Pain Point) 분석</li>
-                                <li>물리, 화학, 수학 등 심화 교과목의 학습 논리를 제품의 핵심 로직으로 전환하는 역량</li>
-                            </ul>
-                        </div>
-                        <div class="sub-section">
-                            <h4>저탄소/에너지 및 반도체 엔지니어링 포럼 참여</h4>
-                            <ul>
-                                <li>첨단 기술 트렌드 및 엔지니어링 인사이트 확보를 통한 서비스의 전문성 강화</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="detail-item">
-                        <div class="section-header" style="margin-top: 0;">Strengths</div>
-                        <ul class="bullet-list">
-                            <li><strong>STEM 도메인 전문성</strong>: 인문계 중심의 기존 교육 서비스가 담아내기 어려웠던 수식, 도표, 공학적 논리 구조를 완벽하게 설계하고
-                                구현할 수 있는 독보적인 전문성을 보유하고 있습니다.</li>
-                            <li><strong>기술적 문제 해결사(Troubleshooter)</strong>: 딥러닝과 빅데이터 분석 역량을 바탕으로, 서비스 확장 과정에서 발생하는 기술적
-                                난제를 공학적 접근 방식으로 돌파합니다.</li>
-                            <li><strong>브릿지 리더십</strong>: 문과적 감성의 서비스 UI/UX와 이공계의 정밀한 기술 로직 사이의 간극을 메우며, 전공을 불문하고 모든
-                                학습자에게 최적화된 경험을 제공합니다.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </main>
 
     <footer>
