@@ -112,6 +112,7 @@ header {
     margin-bottom: 1rem;
     background: linear-gradient(135deg, #fff, #aaa);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -412,23 +413,53 @@ header {
     list-style: none;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .check-list li {
-    background: rgba(255, 255, 255, 0.02);
-    padding: 1rem;
-    border-radius: 8px;
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 1rem;
     display: flex;
-    align-items: center;
-    gap: 0.8rem;
+    align-items: flex-start;
+    gap: 1rem;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s;
 }
 
-.check-list li::before {
-    content: '✓';
+.check-list li:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.check-icon {
     color: #10b981;
-    /* Green */
+    /* Green-500 */
     font-weight: bold;
+    font-size: 1.2rem;
+    line-height: 1;
+    margin-top: 0.2rem;
+    flex-shrink: 0;
+}
+
+.list-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.list-content strong {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    display: block;
+}
+
+.list-content p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
 }
 
 .effects {
