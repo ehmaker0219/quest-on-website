@@ -19,7 +19,6 @@
             --text-secondary: #4b5563;
             --accent-color: #3b82f6;
             --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #9333ea 100%);
-            --rainbow-gradient: linear-gradient(90deg, rgba(255, 0, 0, 0.6), rgba(255, 165, 0, 0.6), rgba(255, 255, 0, 0.6), rgba(0, 255, 0, 0.6), rgba(0, 0, 255, 0.6), rgba(75, 0, 130, 0.6), rgba(238, 130, 238, 0.6));
             --card-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.25) 100%);
             --glass-bg: rgba(255, 255, 255, 0.45);
             --glass-border: rgba(255, 255, 255, 0.3);
@@ -82,19 +81,6 @@
         .member-card-front:hover .specular-highlight,
         .member-card-back:hover .specular-highlight {
             opacity: 1;
-        }
-
-        header::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: var(--rainbow-gradient);
-            opacity: 0.4;
-            filter: blur(0.3px);
-            z-index: 10;
         }
 
         .header-container {
@@ -243,20 +229,6 @@
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border: var(--border-width) solid var(--glass-border);
-        }
-
-        .member-card-front::before,
-        .member-card-back::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: var(--rainbow-gradient);
-            opacity: 0.4;
-            filter: blur(0.5px);
-            z-index: 2;
         }
 
         /* Front Styling */

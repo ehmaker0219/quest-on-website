@@ -18,8 +18,6 @@
             --text-primary: #1f1f1f;
             --text-secondary: #4b5563;
             --accent-color: #3b82f6;
-            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #9333ea 100%);
-            --rainbow-gradient: linear-gradient(90deg, rgba(255, 0, 0, 0.8), rgba(255, 165, 0, 0.8), rgba(255, 255, 0, 0.8), rgba(0, 255, 0, 0.8), rgba(0, 0, 255, 0.8), rgba(75, 0, 130, 0.8), rgba(238, 130, 238, 0.8));
             --rainbow-glow: 0 1px 15px rgba(59, 130, 246, 0.2);
             --card-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.25) 100%);
             --glass-bg: rgba(255, 255, 255, 0.45);
@@ -84,19 +82,6 @@
         .card:hover .specular-highlight,
         .feature-card:hover .specular-highlight {
             opacity: 1;
-        }
-
-        header::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: var(--rainbow-gradient);
-            opacity: 0.4;
-            filter: blur(0.3px);
-            z-index: 2;
         }
 
         .header-container {
@@ -262,19 +247,6 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: var(--rainbow-gradient);
-            opacity: 0.4;
-            filter: blur(0.5px);
-            z-index: 2;
-        }
-
         .card p {
             margin-bottom: 1rem;
             color: var(--text-secondary);
@@ -408,26 +380,6 @@
             transition: all 0.6s var(--elastic-out);
             position: relative;
             overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 1.5px;
-            background: var(--rainbow-gradient);
-            opacity: 0.4;
-            transition: all 0.4s ease;
-            filter: blur(0.3px);
-            z-index: 2;
-        }
-
-        .feature-card:hover::before {
-            opacity: 0.9;
-            height: 2px;
-            filter: blur(0px);
         }
 
         .feature-card:hover {
