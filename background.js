@@ -31,10 +31,10 @@ class LiquidBlob {
         this.ctx = canvas.getContext('2d');
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.radius = Math.random() * 400 + 200;
-        this.color = Math.random() > 0.5 ? 'rgba(59, 130, 246, 0.08)' : 'rgba(147, 51, 234, 0.06)';
-        this.vx = (Math.random() - 0.5) * 0.3;
-        this.vy = (Math.random() - 0.5) * 0.3;
+        this.radius = Math.random() * 500 + 300;
+        this.color = Math.random() > 0.5 ? 'rgba(59, 130, 246, 0.15)' : 'rgba(147, 51, 234, 0.12)';
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
     }
 
     update() {
@@ -107,19 +107,22 @@ class ParticleNetwork {
         this.canvas.style.left = '0';
         this.canvas.style.zIndex = '-1';
         this.canvas.style.pointerEvents = 'none';
-        this.canvas.style.filter = 'blur(40px)'; // Liquid effect
-        this.canvas.style.background = '#f8fafc';
+        this.canvas.style.background = '#fcfdfe';
     }
 
     animate() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Draw and update blobs first (liquid background)
+        // Draw Liquid Layer (with blur)
+        this.ctx.save();
+        this.ctx.filter = 'blur(60px)';
         this.blobs.forEach(b => {
             b.update();
             b.draw();
         });
+        this.ctx.restore();
 
+        // Draw Sharp Particle Layer
         this.particles.forEach((p, i) => {
             p.update();
             p.draw();
@@ -132,7 +135,7 @@ class ParticleNetwork {
 
                 if (dist < this.maxDistance) {
                     this.ctx.beginPath();
-                    this.ctx.strokeStyle = `rgba(59, 130, 246, ${0.35 * (1 - dist / this.maxDistance)})`;
+                    this.ctx.strokeStyle = `rgba(59, 130, 246, ${0.4 * (1 - dist / this.maxDistance)})`;
                     this.ctx.lineWidth = 1.2;
                     this.ctx.moveTo(p.x, p.y);
                     this.ctx.lineTo(p2.x, p2.y);
@@ -146,8 +149,8 @@ class ParticleNetwork {
                 const dist = Math.sqrt(dx * dx + dy * dy);
                 if (dist < this.maxDistance * 1.5) {
                     this.ctx.beginPath();
-                    this.ctx.strokeStyle = `rgba(147, 51, 234, ${0.5 * (1 - dist / (this.maxDistance * 1.5))})`;
-                    this.ctx.lineWidth = 1.5;
+                    this.ctx.strokeStyle = `rgba(147, 51, 234, ${0.6 * (1 - dist / (this.maxDistance * 1.5))})`;
+                    this.ctx.lineWidth = 1.6;
                     this.ctx.moveTo(p.x, p.y);
                     this.ctx.lineTo(this.mouse.x, this.mouse.y);
                     this.ctx.stroke();
