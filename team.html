@@ -19,16 +19,18 @@
             --text-secondary: #4b5563;
             --accent-color: #3b82f6;
             --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #9333ea 100%);
-            --card-bg: rgba(255, 255, 255, 0.35);
-            --glass-bg: rgba(255, 255, 255, 0.2);
-            --glass-border: rgba(255, 255, 255, 0.4);
+            --rainbow-gradient: linear-gradient(90deg, rgba(255, 0, 0, 0.6), rgba(255, 165, 0, 0.6), rgba(255, 255, 0, 0.6), rgba(0, 255, 0, 0.6), rgba(0, 0, 255, 0.6), rgba(75, 0, 130, 0.6), rgba(238, 130, 238, 0.6));
+            --card-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.25) 100%);
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.3);
             --glass-blur: blur(25px) saturate(180%);
-            --border-color: rgba(229, 231, 235, 0.3);
+            --border-width: 0.5px;
             --font-main: 'Outfit', sans-serif;
             --font-kr: 'Noto Sans KR', sans-serif;
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 80px rgba(0, 0, 0, 0.05);
+            --elastic-out: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         * {
@@ -49,13 +51,50 @@
         /* Header */
         header {
             padding: 1rem 0;
-            background: rgba(255, 255, 255, 0.3);
+            background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: var(--border-width) solid var(--glass-border);
+            overflow: hidden;
+            transition: padding 0.5s var(--elastic-out), background 0.5s ease;
+        }
+
+        .specular-highlight {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                    rgba(255, 255, 255, 0.6) 0%,
+                    rgba(255, 255, 255, 0) 50%);
+            mix-blend-mode: overlay;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 5;
+        }
+
+        header:hover .specular-highlight,
+        .member-card-front:hover .specular-highlight,
+        .member-card-back:hover .specular-highlight {
+            opacity: 1;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--rainbow-gradient);
+            opacity: 0.4;
+            filter: blur(0.3px);
+            z-index: 10;
         }
 
         .header-container {
@@ -159,10 +198,31 @@
             width: 100%;
             height: 100%;
             text-align: center;
-            transition: transform 0.6s;
+            transition: transform 0.8s var(--elastic-out), box-shadow 0.8s var(--elastic-out);
             transform-style: preserve-3d;
-            border-radius: 1.5rem;
-            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05);
+            border-radius: 2.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .member-card:hover .member-card-inner {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.1);
+        }
+
+        .member-card.flipped:hover .member-card-inner {
+            transform: rotateY(180deg) translateY(-10px) scale(1.02);
+        }
+
+        .grainy-texture {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 3;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
         /* Float class for Javascript toggle */
@@ -177,12 +237,26 @@
             height: 100%;
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
-            border-radius: 1.5rem;
+            border-radius: 2.5rem;
             overflow: hidden;
             background: var(--card-bg);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
+            border: var(--border-width) solid var(--glass-border);
+        }
+
+        .member-card-front::before,
+        .member-card-back::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--rainbow-gradient);
+            opacity: 0.4;
+            filter: blur(0.5px);
+            z-index: 2;
         }
 
         /* Front Styling */
@@ -375,6 +449,7 @@
 
 <body>
     <header>
+        <div class="specular-highlight"></div>
         <div class="container header-container">
             <a href="index.html" class="logo">
                 <img src="images/qlogo_icon.png" alt="Quest-On Logo">
@@ -404,6 +479,8 @@
             <div class="member-card" onclick="this.classList.toggle('flipped')">
                 <div class="member-card-inner">
                     <div class="member-card-front">
+                        <div class="grainy-texture"></div>
+                        <div class="specular-highlight"></div>
                         <div class="member-image-wrapper">
                             <img src="images/member_leejun.png" alt="이준">
                         </div>
@@ -412,6 +489,8 @@
                         <div class="click-hint">Click for details ↺</div>
                     </div>
                     <div class="member-card-back">
+                        <div class="grainy-texture"></div>
+                        <div class="specular-highlight"></div>
                         <div class="back-header">
                             <h3>이준</h3>
                             <div class="role-small">Co-Founder & CEO</div>
@@ -461,6 +540,8 @@
             <div class="member-card" onclick="this.classList.toggle('flipped')">
                 <div class="member-card-inner">
                     <div class="member-card-front">
+                        <div class="grainy-texture"></div>
+                        <div class="specular-highlight"></div>
                         <div class="member-image-wrapper">
                             <img src="images/member_yooyoungjun.png" alt="유영준">
                         </div>
@@ -518,6 +599,8 @@
             <div class="member-card" onclick="this.classList.toggle('flipped')">
                 <div class="member-card-inner">
                     <div class="member-card-front">
+                        <div class="grainy-texture"></div>
+                        <div class="specular-highlight"></div>
                         <div class="member-image-wrapper">
                             <img src="images/member_jojunhyeong_new.jpg" alt="조준형">
                         </div>
@@ -574,6 +657,8 @@
             <div class="member-card" onclick="this.classList.toggle('flipped')">
                 <div class="member-card-inner">
                     <div class="member-card-front">
+                        <div class="grainy-texture"></div>
+                        <div class="specular-highlight"></div>
                         <div class="member-image-wrapper">
                             <img src="images/member_leeeunho.png" alt="이은호">
                         </div>
@@ -631,6 +716,8 @@
             <div class="member-card" onclick="this.classList.toggle('flipped')">
                 <div class="member-card-inner">
                     <div class="member-card-front">
+                        <div class="grainy-texture"></div>
+                        <div class="specular-highlight"></div>
                         <div class="member-image-wrapper">
                             <img src="images/member_choijinho.jpg" alt="최진호">
                         </div>
@@ -690,6 +777,33 @@
     </main>
 
     <script src="background.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Specular Highlight Mouse Tracking
+            document.querySelectorAll('header, .member-card-front, .member-card-back').forEach(element => {
+                element.addEventListener('mousemove', e => {
+                    const rect = element.getBoundingClientRect();
+                    const x = ((e.clientX - rect.left) / rect.width) * 100;
+                    const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+                    element.style.setProperty('--mouse-x', `${x}%`);
+                    element.style.setProperty('--mouse-y', `${y}%`);
+                });
+            });
+
+            // Sticky Header Effects
+            const header = document.querySelector('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.style.padding = '0.7rem 0';
+                    header.style.background = 'rgba(255, 255, 255, 0.55)';
+                } else {
+                    header.style.padding = '1rem 0';
+                    header.style.background = 'var(--glass-bg)';
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
