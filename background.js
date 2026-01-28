@@ -6,7 +6,7 @@ class Particle {
         this.y = Math.random() * canvas.height;
         this.vx = (Math.random() - 0.5) * 0.5;
         this.vy = (Math.random() - 0.5) * 0.5;
-        this.radius = Math.random() * 2;
+        this.radius = Math.random() * 2.5 + 0.5;
     }
 
     update() {
@@ -20,7 +20,7 @@ class Particle {
     draw() {
         this.ctx.beginPath();
         this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        this.ctx.fillStyle = 'rgba(59, 130, 246, 0.4)';
+        this.ctx.fillStyle = 'rgba(59, 130, 246, 0.6)';
         this.ctx.fill();
     }
 }
@@ -65,7 +65,7 @@ class ParticleNetwork {
         this.canvas.style.left = '0';
         this.canvas.style.zIndex = '-1';
         this.canvas.style.pointerEvents = 'none';
-        this.canvas.style.background = 'radial-gradient(circle at 50% 50%, #f8fafc 0%, #ffffff 100%)';
+        this.canvas.style.background = 'radial-gradient(circle at 50% 50%, #f4f7fa 0%, #f8fafc 100%)';
     }
 
     animate() {
@@ -84,8 +84,8 @@ class ParticleNetwork {
 
                 if (dist < this.maxDistance) {
                     this.ctx.beginPath();
-                    this.ctx.strokeStyle = `rgba(59, 130, 246, ${0.15 * (1 - dist / this.maxDistance)})`;
-                    this.ctx.lineWidth = 1;
+                    this.ctx.strokeStyle = `rgba(59, 130, 246, ${0.35 * (1 - dist / this.maxDistance)})`;
+                    this.ctx.lineWidth = 1.2;
                     this.ctx.moveTo(p.x, p.y);
                     this.ctx.lineTo(p2.x, p2.y);
                     this.ctx.stroke();
@@ -99,8 +99,8 @@ class ParticleNetwork {
                 const dist = Math.sqrt(dx * dx + dy * dy);
                 if (dist < this.maxDistance * 1.5) {
                     this.ctx.beginPath();
-                    this.ctx.strokeStyle = `rgba(147, 51, 234, ${0.2 * (1 - dist / (this.maxDistance * 1.5))})`;
-                    this.ctx.lineWidth = 1;
+                    this.ctx.strokeStyle = `rgba(147, 51, 234, ${0.5 * (1 - dist / (this.maxDistance * 1.5))})`;
+                    this.ctx.lineWidth = 1.5;
                     this.ctx.moveTo(p.x, p.y);
                     this.ctx.lineTo(this.mouse.x, this.mouse.y);
                     this.ctx.stroke();
